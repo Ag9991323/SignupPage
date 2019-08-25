@@ -3,6 +3,7 @@ const router = express.Router();
 
 const mongoose = require('mongoose');
 var User= require('./models/User');
+var Product = require("./models/Product");
  const db = require('./public/config/keys').MongoURI;
 mongoose
   .connect(
@@ -36,6 +37,29 @@ router.post('/',function(req,res){
    })
 });
 //for login the current user
+
+router.get('/search',(req,res)=>{
+    console.log('getting all product');
+    Product.find({})
+    .exec((err,product)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            var item = req.body.item;
+           
+         product.forEach((e)=>{
+             if(e.product_category_tree.match(item)){
+                 console.log(e);
+             }
+         })
+       
+
+          
+        }
+    });
+    
+});
 router.get('/login',(req,res)=>{
     console.log('getting all user');
     User.find({})
