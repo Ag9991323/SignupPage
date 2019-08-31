@@ -37,30 +37,37 @@ router.post('/',function(req,res){
    })
 });
 //for login the current user
-
-router.get('/search',(req,res)=>{
+ var array =[];
+router.get('/search',(req,res,next)=>{
     console.log('getting all product');
     Product.find({})
     .exec((err,product)=>{
         if(err){
-            console.log(err);
+            return res.send();
         }
         else{
             var item = req.body.item;
-           
+           array=[];
          product.forEach((e)=>{
              if(e.product_category_tree.match(item)){
-                 console.log(e);
-             }
-         })
-       
+                array.push(e);
+                
+                }
+             
+              
+         });
+         
+         res.send(array);
+         res.end();
+        
 
           
         }
     });
     
 });
-router.get('/login',(req,res)=>{
+
+router.get('/login',(req,res,next)=>{
     console.log('getting all user');
     User.find({})
     .exec((err,user)=>{
@@ -71,8 +78,11 @@ router.get('/login',(req,res)=>{
             var email = req.body.email;
             var password = req.body.password;
             user.forEach((item)=>{
+               
                 if(email==item.Useremail && password==item.password){
-                    console.log(` hi Mr ${item.Username} welcome to Collective Shopping ${item._id}`);
+                 res.send(item.Useremail);
+                  res.end();
+                  
                 }
                 
             });
@@ -87,6 +97,7 @@ router.get('/login',(req,res)=>{
        });
 
 
+       
 
 // router.get('/',(req,res)=>{
 //     res.json(members);
